@@ -1,6 +1,7 @@
-var formEl = document.querySelector("#task-form");
-var tasksToDoEl = document.querySelector("#tasks-to-do");
-var taskIdCounter=0;
+var formEl = document.querySelector("#task-form"); // initial task submit for at header
+var tasksToDoEl = document.querySelector("#tasks-to-do"); //task ul holding each tasks
+var taskIdCounter=0; // counter to set unique ID to each task/task actions
+var pageContentEl=document.querySelector("#page-content"); // main container holding all the tasks
 
 var taskFormHandler = function (event) {
 
@@ -53,9 +54,7 @@ var createTaskEl = function(taskDataObj) {
     // callback function to create task action buttons and drop down
 
     var taskActionsEl = createTaskActions(taskIdCounter);
-    listItemEl.appendChild(taskActionEl);
-
-    tasksToDoEl.appendChild(listItemEl);
+    listItemEl.appendChild(taskActionsEl);
 
     //append the li item to the ul
     tasksToDoEl.appendChild(listItemEl);
@@ -111,6 +110,62 @@ var createTaskActions = function(taskId) {
 
         return actionContainerEl;
 
+};
+
+var taskButtonHandler = function(event) {
+
+    //get target element from event
+
+    var targetEl = event.target
+
+    // if edit button is clicked
+    if(targetEl.matches(".edit-btn")) {
+        var taskId= targetEl.getAttribute("data-task-id");
+        editTask(taskId);
+    }
+    
+
+    // if delete button is clicked 
+    if (targetEl.matches(".delete-btn")) {  //matches() method similar to querySelector() except instead of returning an element it returns true/false if it matches the argument
+        // get the elements data-task-id
+        var taskId= event.target.getAttribute("data-task-id")
+        deleteTask(taskId);
+    }
+
+};
+
+var editTask = function (taskId) {
+    
+    //get task list item element
+    var taskSelected = document.querySelector(".task-item[data-task-id= '" + taskId + "']"); 
+
+    // get content from task name and task type
+    var taskName= taskSelected.querySelector("h3.task-name").textContent;
+    
+
+    var taskType = taskSelected.querySelector("span.task-type").textContent;
+    
+    // takes the taskName and taskType and enters it into the submission form in header
+    document.querySelector("input[name='task-name']").value= taskName;
+    document.querySelector("select[name='task-type']").value= taskType;
+
+    // updates the submit task button from "add task" to "save task"
+    document.querySelector("#save-task").textContent="Save Task";
+
+    //adds the tasks data-task-id to the form itself
+    formEl.setAttribute("data-task-id", taskId);
+    
 }
 
+var deleteTask = function(taskId) {
+    var taskSelected = document.querySelector(".task-item[data-task-id= '" + taskId + "']"); //leave no space between .task-item and data task id. This searches for a task item with that id, a space would look for an attribute inside task item element
+    taskSelected.remove(); //remove method removes the selected element
+    
+};
+
+
+
+
+
 formEl.addEventListener("submit", taskFormHandler); //submit listener works when user clicks button with type 'submit' or enter is pressed
+pageContentEl.addEventListener("click", taskButtonHandler); //add click to main body so it bubbles to the task action buttons
