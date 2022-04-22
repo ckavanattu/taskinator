@@ -7,6 +7,15 @@ var taskFormHandler = function (event) {
 
     var taskNameInput = document.querySelector("input[name='task-name']").value; // [these square brackets] are used to querySelect an HTML element by it's attribute, in this case the input name
     var taskTypeInput = document.querySelector("select[name='task-type']").value;
+
+    //check if input values are empty
+
+    if (!taskNameInput || !taskTypeInput) {
+        alert("you need to fill out the task form!");
+        return false; //stops if function and returns a value of false
+    }
+
+    formEl.reset();//clears the form after the task is submitted, reset is a DOM method specific to form elements
     
     //package the name and type into an object
     var taskDataObj = {
