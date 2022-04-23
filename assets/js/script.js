@@ -81,6 +81,10 @@ var createTaskEl = function(taskDataObj) {
 
     tasks.push(taskDataObj) //push adds the content (in this case the task object) to the end of a specified array (tasks array)
 
+    //save to local storage
+
+    saveTasks();
+
     // increase task counter to create next unique id
     taskIdCounter++;
 
@@ -190,7 +194,10 @@ var deleteTask = function(taskId) {
         if (tasks[i].id !== parseInt(taskId)){
             updatedTaskArr.push(tasks[i]);
         }
-    }
+    }//updates the task array to match updated task array, now it won't have the deleted task.
+
+    //save to local storage
+    saveTasks();
 
 };
 
@@ -210,6 +217,10 @@ var completeEditTask= function(taskName, taskType, taskId) {
             tasks[i].type = taskType;
         }
     };
+
+    //save to local storage
+    
+    saveTasks();
 
 
     alert("Task Updated!");
@@ -248,7 +259,19 @@ var taskStatusChangeHandler = function(event) {
         }
     }
 
+    // save to local storage
+    saveTasks();
+
 };
+
+//Save the tasks array to local storage
+
+var saveTasks = function() {
+
+localStorage.setItem("tasks", JSON.stringify(tasks)); 
+
+//add saveTasks call to createTaskEl, completeEditTask, taskStatusChangeHandler, and deleteTask
+}
 
 
 formEl.addEventListener("submit", taskFormHandler); //submit listener works when user clicks button with type 'submit' or enter is pressed
