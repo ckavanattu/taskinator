@@ -273,7 +273,32 @@ localStorage.setItem("tasks", JSON.stringify(tasks));
 //add saveTasks call to createTaskEl, completeEditTask, taskStatusChangeHandler, and deleteTask
 }
 
+var loadTasks = function() {
+// get tasks from local storage
+//convert from string format back to an array
+//iterates through tasks array and creates task elements
+var savedTasks = localStorage.getItem ("tasks"); 
+
+//checks if there are no tasks in local sorage
+if (!tasks) {
+    tasks = [];
+    return false;
+}
+
+//convert back to an array
+tasks= JSON.parse(savedTasks);
+
+for (i=0; i < tasks.length; i++) {
+ createTaskEl(savedTasks[i]);
+}
+
+
+}
+
+
 
 formEl.addEventListener("submit", taskFormHandler); //submit listener works when user clicks button with type 'submit' or enter is pressed
 pageContentEl.addEventListener("click", taskButtonHandler); //add click to main body so it bubbles to the task action buttons
 pageContentEl.addEventListener("change", taskStatusChangeHandler); 
+
+loadTasks();
